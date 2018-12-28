@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ActivityLog">
+
+    <ScrollView
+            android:id="@+id/LogScroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="70dp">
+        <TextView
+                android:id="@+id/LogOutput"
+                android:text="@string/DataOutputString"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars = "vertical"
+                android:fadeScrollbars="false"
+        />
+    </ScrollView>
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+        <Button
+            android:id="@+id/LogBackBtn"
+            android:text="@string/BackToMainString"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="200dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/rounded_button"
+        />
+    </RelativeLayout>
+
+</RelativeLayout>

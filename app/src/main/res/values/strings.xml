@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Boiler-0.2</string>
+    <string name="TemperatureTextString">Cold</string>
+    <string name="TemperatureValueString">25\u00B0</string>
+    <string name="ReadTemperatureString">Read temperature</string>
+    <string name="SettingsString">Settings</string>
+    <string name="LogFileString">Log File</string>
+    <string name="ConnectionStatusString">Not connected</string>
+    <string name="DataOutputString">Sensors data:\n\n</string>
+    <string name="BackToMainString">Back</string>
+    <string name="TemperatureTableNameString">Current settings:</string>
+    <string name="TemperatureHotString">Hot</string>
+    <string name="TemperatureOkString">Ok</string>
+    <string name="TemperatureColdString">Cold</string>
+</resources>

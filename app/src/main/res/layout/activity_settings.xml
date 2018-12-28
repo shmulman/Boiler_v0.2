@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        tools:context=".ActivitySettings">
+
+    <TextView
+            android:id="@+id/TemperatureTableName"
+            android:text="@string/TemperatureTableNameString"
+            android:textSize="40sp"
+            android:textColor="#000000"
+            android:gravity="left"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+    />
+
+    <TextView
+            android:id="@+id/TemperatureHot"
+            android:text="@string/TemperatureHotString"
+            android:textSize="30sp"
+            android:textColor="#FF0000"
+            android:gravity="left"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+    />
+
+    <TextView
+            android:id="@+id/TemperatureOk"
+            android:text="@string/TemperatureOkString"
+            android:textSize="30sp"
+            android:textColor="#00FF00"
+            android:gravity="left"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+    />
+
+    <TextView
+            android:id="@+id/TemperatureCold"
+            android:text="@string/TemperatureColdString"
+            android:textSize="30sp"
+            android:textColor="#0000FF"
+            android:gravity="left"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+    />
+
+    <!--Put the following items to the bottom of the screen-->
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+    </FrameLayout>
+
+    <Button
+            android:id="@+id/SettingsBackBtn"
+            android:text="@string/BackToMainString"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="200dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/rounded_button"
+    />
+
+</LinearLayout>

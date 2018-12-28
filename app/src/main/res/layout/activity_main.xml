@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+
+    <TextView
+            android:id="@+id/TemperatureText"
+            android:text="@string/TemperatureTextString"
+            android:textSize="120sp"
+            android:textColor="#0000FF"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+    />
+
+    <TextView
+            android:id="@+id/TemperatureValue"
+            android:text="@string/TemperatureValueString"
+            android:textSize="50sp"
+            android:textColor="#000000"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+    />
+
+    <!--Put the following items to the bottom of the screen-->
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+    </FrameLayout>
+
+    <Button
+            android:id="@+id/ReadSensorsBtn"
+            android:text="@string/ReadTemperatureString"
+            android:layout_width="340dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:shadowRadius="50"
+            android:background="@drawable/rounded_button"
+    />
+
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="70dp">
+        <Button
+            android:id="@+id/SettingsBtn"
+            android:text="@string/SettingsString"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:shadowRadius="50"
+            android:background="@drawable/rounded_button"
+        />
+
+        <Button
+            android:id="@+id/ShowLogBtn"
+            android:text="@string/LogFileString"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="200dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded_button"
+        />
+    </RelativeLayout>
+
+    <TextView
+            android:id="@+id/ConnectionStatus"
+            android:text="@string/ConnectionStatusString"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:fadeScrollbars="false"
+    />
+
+</LinearLayout>
