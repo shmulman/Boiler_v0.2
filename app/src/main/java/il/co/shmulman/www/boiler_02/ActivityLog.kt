@@ -1,5 +1,6 @@
 package il.co.shmulman.www.boiler_02
 
+import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -12,16 +13,24 @@ class ActivityLog : AppCompatActivity() {
         setContentView(R.layout.activity_log)
 
         // Read the Log data from the Main Activity
-        val logDataArrayList : ArrayList<String> = intent.getStringArrayListExtra ("textLogData")
-        if (logDataArrayList.isEmpty()) {
+
+        val sharedPreferenceVariableForLogFile = getSharedPreferences("myfile",MODE_PRIVATE)
+        val errorCodeSet = setOf<String>()
+        val dataFromSharedPreference = sharedPreferenceVariableForLogFile.getStringSet("KeySet", errorCodeSet)
+
+        if (dataFromSharedPreference.isEmpty()) {
             LogOutput.append("No sensors data found")
         } else {
-            var outputStringForLog = logDataArrayList.toString()
-            outputStringForLog = outputStringForLog.replace("[", "")
-            outputStringForLog = outputStringForLog.replace("]", "")
-            outputStringForLog = outputStringForLog.replace(",", "")
+            var outputStringForLog = dataFromSharedPreference.sorted().toString()
+            //outputStringForLog = outputStringForLog.replace("[", "")
+            //outputStringForLog = outputStringForLog.replace("]", "")
+            //outputStringForLog = outputStringForLog.replace(",", "")
+            outputStringForLog = outputStringForLog.trim()
             LogOutput.append(outputStringForLog)
         }
+
+
+        //LogOutput.append("${dataFromSharedPreference.sorted()}\n")
 
         // Go back to Main Activity
         LogBackBtn.setOnClickListener {

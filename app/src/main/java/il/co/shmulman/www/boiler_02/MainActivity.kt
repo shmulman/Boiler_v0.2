@@ -9,9 +9,7 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.net.URL
 
-// Global list for Log file and temperature value
-var temperatureInt = 0
-var logStringMutibleList: MutableList<String> = mutableListOf()
+// Global variables
 
 // Temperature definitions for color coding
 var coldTemperatureMaxValue = 36
@@ -19,11 +17,20 @@ var okTemperatureMinValue = 37
 var okTemperatureMaxValue = 40
 var hotTemperatureMinValue = 41
 
+// Global temperature value
+var temperatureInt = 0
+
+
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val sharedPreferenceVariableForLogFile = getSharedPreferences("myfile",MODE_PRIVATE)
+        sharedPreferenceVariableForLogFile.edit().clear()
+        sharedPreferenceVariableForLogFile.edit().remove("KeySet")
+        sharedPreferenceVariableForLogFile.edit().commit()
 
         ReadSensorsBtn.setOnClickListener() {
             ConnectionStatus.text = "Loading sensors ..."
@@ -31,28 +38,60 @@ class MainActivity : AppCompatActivity() {
             // Local axillary variables initiation
             var dataLoaded200 = false
             var dataLoaded201 = false
+            var response200String = ""
+            var response201String = ""
 
             // Read sensors data via HTML file thread
             doAsync{
                 val response200 = URL("http://10.100.102.200/").readText()
                 dataLoaded200 = true
                 uiThread {
-                    printOutput(response200,"200")
+                    response200String = printOutput(response200,"200")
+
+                    val sharedPreferenceVariableForLogFile = getSharedPreferences("myfile",MODE_PRIVATE)
+                    // Add data to the Log database
+                    //ConnectionStatus.text = response200String
+
+                    val errorCodeSet = setOf<String>()
+                    val dataFromSharedPreference = sharedPreferenceVariableForLogFile.getStringSet("KeySet", errorCodeSet)
+
+                    dataFromSharedPreference.add(response200String)
+
+                    with(sharedPreferenceVariableForLogFile.edit()){
+                        //putStringSet("KeySet",mutableLogOfStrings)
+                        putStringSet("KeySet",dataFromSharedPreference)
+                        commit()
+                    }
                 }
-                ConnectionStatus.text = printDataLoadedStatus(dataLoaded200,dataLoaded201)
+                ConnectionStatus.text = printDataLoadedStatus(dataLoaded200,dataLoaded201) //<----------------------- GOOD
+
             }
 
             doAsync {
                 val response201 = URL("http://10.100.102.201/").readText()
                 dataLoaded201 = true
                 uiThread {
-                    printOutput(response201,"201")
+                    response201String = printOutput(response201,"201")
+                    val sharedPreferenceVariableForLogFile = getSharedPreferences("myfile",MODE_PRIVATE)
+                    // Add data to the Log database
+                    //ConnectionStatus.text = response201String
+
+                    val errorCodeSet = setOf<String>()
+                    val dataFromSharedPreference = sharedPreferenceVariableForLogFile.getStringSet("KeySet", errorCodeSet)
+
+                    dataFromSharedPreference.add(response201String)
+
+                    with(sharedPreferenceVariableForLogFile.edit()){
+                        putStringSet("KeySet",dataFromSharedPreference)
+                        commit()
+                    }
                 }
-                ConnectionStatus.text = printDataLoadedStatus(dataLoaded200,dataLoaded201)
+                ConnectionStatus.text = printDataLoadedStatus(dataLoaded200,dataLoaded201) //<----------------------- GOOD
             }
 
             // Print the result, whether the HTML file was read
-            ConnectionStatus.text = printDataLoadedStatus(dataLoaded200,dataLoaded201)
+            ConnectionStatus.text = printDataLoadedStatus(dataLoaded200,dataLoaded201) //<----------------------- GOOD
+
         }
 
         // Go to Log Activity and show the Log file
@@ -60,11 +99,6 @@ class MainActivity : AppCompatActivity() {
             ConnectionStatus.text = "Read Log File"
 
             val intentToLog = Intent(applicationContext,ActivityLog::class.java)
-
-            // Intent can not pass a List, it is converted to Array
-            val logDataArrayList : ArrayList<String> = ArrayList(logStringMutibleList)
-            intentToLog.putExtra("textLogData",logDataArrayList)
-
             startActivity(intentToLog)
         }
 
@@ -72,16 +106,11 @@ class MainActivity : AppCompatActivity() {
             ConnectionStatus.text = "Go to Settings"
 
             val intentToSettings = Intent(applicationContext,ActivitySettings::class.java)
-
-            // Intent can not pass a List, it is converted to Array
-            val logDataArrayList : ArrayList<String> = ArrayList(logStringMutibleList)
-            intentToSettings.putExtra("textLogData",logDataArrayList)
-
             startActivity(intentToSettings)
         }
     }
 
-    private fun printOutput(response : String, sensorNumber : String) {
+    private fun printOutput(response : String, sensorNumber : String) : String {
         // Parse data from HTML file of the sensors
         var timeAndDate = response.substringAfter("<h1>").substringBefore("<br>").dropLast(1)
         var temperatureString = response.substringAfter("Temp").substringBefore(" C ")
@@ -90,21 +119,12 @@ class MainActivity : AppCompatActivity() {
         timeAndDate = timeAndDate.replace("\\n".toRegex(), "")
         temperatureString = temperatureString.replace("\\s".toRegex(), "")
 
-        // Update the Logfile List
-        logStringMutibleList.add("$sensorNumber $timeAndDate Temp: $temperatureInt\n")
-
         // Convert parsed temperature string to int
         val temperatureIntOrNull = temperatureString.toIntOrNull()
         if (temperatureIntOrNull == null) {
             ConnectionStatus.text = "Can not parse the temperature"
         } else {
             temperatureInt = temperatureIntOrNull
-            // Save the temperature to SharedPreference
-            val temperatureIntSharedPreference = getPreferences(MODE_PRIVATE)
-            with (temperatureIntSharedPreference.edit()) {
-                putInt("SharedPreferenceKeyTemperature",temperatureInt)
-                apply()
-            }
         }
 
         // Color coding for different temperatures
@@ -125,6 +145,7 @@ class MainActivity : AppCompatActivity() {
         }
         TemperatureValue.text = temperatureString + "\u00B0"
 
+        return "$timeAndDate - $sensorNumber - $temperatureString \u00B0\n"
     }
 
     private fun printDataLoadedStatus(status1:Boolean,status2:Boolean):String {
