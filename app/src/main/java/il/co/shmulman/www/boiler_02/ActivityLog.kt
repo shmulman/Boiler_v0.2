@@ -24,13 +24,9 @@ class ActivityLog : AppCompatActivity() {
         if (logDataArrayList.isEmpty()) {
             LogOutput.append("No sensors data found")
         } else {
-            var outputStringForLog = logDataArrayList.sorted().toString()
-            //outputStringForLog = outputStringForLog.filterNot { it == "" }
-            outputStringForLog = outputStringForLog.replace("[", "\u0000")
-            outputStringForLog = outputStringForLog.replace("]", "\u0000")
-            outputStringForLog = outputStringForLog.replace(',', '\u0000')
-            outputStringForLog = outputStringForLog.filterNot{ it.equals("") }
-            LogOutput.append(outputStringForLog)
+            for (element in logDataArrayList) {
+                LogOutput.append(element)
+            }
         }
 
         // Go back to Main Activity

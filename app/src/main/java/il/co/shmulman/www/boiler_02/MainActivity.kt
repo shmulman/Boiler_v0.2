@@ -46,10 +46,9 @@ class MainActivity : AppCompatActivity() {
                 uiThread {
                     // Main activity GUI update
                     response200String = printOutput(response200,"200")
+                    //Data for Log file
+                    dataForLogArrayList.add(response200String)
                 }
-                //Data for Log file
-                dataForLogArrayList.add(response200String)
-
                 // Update status bar
                 ConnectionStatus.text = printDataLoadedStatus(dataLoaded200,dataLoaded201)
             }
@@ -60,10 +59,9 @@ class MainActivity : AppCompatActivity() {
                 uiThread {
                     // Main activity GUI update
                     response201String = printOutput(response201,"201")
+                    //Data for Log file
+                    dataForLogArrayList.add(response201String)
                 }
-                //Data for Log file
-                dataForLogArrayList.add(response201String)
-
                 // Update status bar
                 ConnectionStatus.text = printDataLoadedStatus(dataLoaded200,dataLoaded201)
             }
