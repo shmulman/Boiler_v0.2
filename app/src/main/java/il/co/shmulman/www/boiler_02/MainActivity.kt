@@ -15,11 +15,12 @@ var coldTemperatureMaxValue = 36
 var okTemperatureMinValue = 37
 var okTemperatureMaxValue = 40
 var hotTemperatureMinValue = 41
+
 // Global temperature value
 var temperatureInt = 0
-
-// Define data set for Log file
-var dataForLogArrayList = ArrayList<String>()
+var printOutputTemperatureLast = 0
+var printOutputTemperatureLow = 0
+var printOutputTemperatureHigh = 0
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,14 +28,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Define data set for Log file
+        var dataForLogArrayList = ArrayList<String>()
+        //Clear the previous Log data
+        dataForLogArrayList.clear()
+
+        // Clear ShearedPreferences
+        val preferences = getSharedPreferences("myfile", 0)
+        preferences.edit().remove("KeySet").commit()
+
         // Local axillary variables initiation
         var response200String = ""
         var response201String = ""
         var dataLoaded200 = false
         var dataLoaded201 = false
-
-        //Clear the previous Log data
-        dataForLogArrayList.clear()
 
         ReadSensorsBtn.setOnClickListener() {
             ConnectionStatus.text = "Loading sensors ..."
@@ -109,24 +116,59 @@ class MainActivity : AppCompatActivity() {
             temperatureInt = temperatureIntOrNull
         }
 
-        // Color coding for different temperatures and main activity GUI update
-        when (temperatureInt) {
-            in 0..coldTemperatureMaxValue -> {
-                TemperatureText.setTextColor(Color.parseColor("#0000FF"))
-                TemperatureText.text = "Cold"
+        // Compare to last temperature
+        if (printOutputTemperatureLast == temperatureInt) {
+            // Color coding for different temperatures and main activity GUI update
+            when (temperatureInt) {
+                in 0..coldTemperatureMaxValue -> {
+                    TemperatureText.setTextColor(Color.parseColor("#0000FF"))
+                    TemperatureText.text = "Cold"
+                }
+                in okTemperatureMinValue..okTemperatureMaxValue -> {
+                    TemperatureText.setTextColor(Color.parseColor("#00FF00"))
+                    TemperatureText.text = "Ok"
+                }
+                in hotTemperatureMinValue..100 -> {
+                    TemperatureText.setTextColor(Color.parseColor("#FF0000"))
+                    TemperatureText.text = "Hot"
+                }
+                else -> ConnectionStatus.text = "Temperature $temperatureInt is not feasible for water"
             }
-            in okTemperatureMinValue..okTemperatureMaxValue -> {
-                TemperatureText.setTextColor(Color.parseColor("#00FF00"))
-                TemperatureText.text = "Ok"
-            }
-            in hotTemperatureMinValue..100 -> {
-                TemperatureText.setTextColor(Color.parseColor("#FF0000"))
-                TemperatureText.text = "Hot"
-            }
-            else -> ConnectionStatus.text = "Temperature $temperatureInt is not feasible for water"
-        }
-        TemperatureValue.text = temperatureString + "\u00B0"
+            TemperatureValue.text = "$temperatureString\u00B0"
+            ConnectionStatus.text = "One value $temperatureInt°"
+        } else {
 
+            // Define high and low temperatures
+            if (printOutputTemperatureLast > temperatureInt){
+                printOutputTemperatureHigh = printOutputTemperatureLast
+                printOutputTemperatureLow = temperatureInt
+            } else {
+                printOutputTemperatureHigh = temperatureInt
+                printOutputTemperatureLow = printOutputTemperatureLast
+            }
+
+            // Color coding for different temperatures and main activity GUI update
+            when (printOutputTemperatureHigh) {
+                in 0..coldTemperatureMaxValue -> {
+                    TemperatureText.setTextColor(Color.parseColor("#0000FF"))
+                    TemperatureText.text = "Cold"
+                }
+                in okTemperatureMinValue..okTemperatureMaxValue -> {
+                    TemperatureText.setTextColor(Color.parseColor("#00FF00"))
+                    TemperatureText.text = "Ok"
+                }
+                in hotTemperatureMinValue..100 -> {
+                    TemperatureText.setTextColor(Color.parseColor("#FF0000"))
+                    TemperatureText.text = "Hot"
+                }
+                else -> ConnectionStatus.text = "Temperature $temperatureInt is not feasible for water"
+            }
+            TemperatureValue.text = "$printOutputTemperatureHigh\u00B0"
+            ConnectionStatus.text = "Temperature span from $printOutputTemperatureLow° to $printOutputTemperatureHigh°"
+        }
+
+        // Remember the last value
+        printOutputTemperatureLast = temperatureInt
         return "$timeAndDate - $sensorNumber - $temperatureString \u00B0\n"
     }
 

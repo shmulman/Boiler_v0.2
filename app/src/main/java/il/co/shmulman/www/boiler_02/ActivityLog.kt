@@ -48,7 +48,7 @@ class ActivityLog : AppCompatActivity() {
         dataFromSharedPreferenceMutableString = logDataArrayList.toMutableSet()
         with(sharedPreferenceVariableForLogFile.edit()){
             putStringSet("KeySet",dataFromSharedPreferenceMutableString)
-            apply()
+            commit()
         }
 
     }
