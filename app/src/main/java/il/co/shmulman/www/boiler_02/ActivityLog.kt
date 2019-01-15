@@ -11,15 +11,23 @@ class ActivityLog : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log)
 
-        // Read the Log data from the Main Activity
-        //val sharedPreferenceVariableForLogFile = getSharedPreferences("myfile",MODE_PRIVATE)
-        //val errorCodeSet = setOf<String>()
-        //val dataFromSharedPreference = sharedPreferenceVariableForLogFile.getStringSet("KeySet", errorCodeSet)
+        // Read SharedPreferences file from previous Log visit
+        val sharedPreferenceVariableForLogFile = getSharedPreferences("myfile",MODE_PRIVATE)
+        val errorCodeSet = setOf<String>()
+        val dataFromSharedPreference = sharedPreferenceVariableForLogFile.getStringSet("KeySet", errorCodeSet)
+
+        // Initiate ArrayList from ShearedPreferences
+        var startDataArrayList = arrayListOf<String>()
+        if (dataFromSharedPreference.isNotEmpty()){
+            startDataArrayList = ArrayList(dataFromSharedPreference)
+        }
 
 
-
-        //The intent sends dataForLogArrayList and ActivityLog saves it to sharedPreference
+        // This activity receives the data via intent and print it as Log
         val logDataArrayList : ArrayList<String> = intent.getStringArrayListExtra ("LogData")
+
+        // Add previous data from previous Log
+        logDataArrayList.addAll(startDataArrayList)
 
         if (logDataArrayList.isEmpty()) {
             LogOutput.append("No sensors data found")
@@ -35,23 +43,13 @@ class ActivityLog : AppCompatActivity() {
             startActivity(intentBackToMain)
         }
 
-
-        /*
-        // ERROR
-        // Add data to the Log database
-        val sharedPreferenceVariableForLogFile = getSharedPreferences("myfile",MODE_PRIVATE)
-        val errorCodeSet = setOf<String>()
-
-        var dataFromSharedPreference = sharedPreferenceVariableForLogFile.getStringSet("KeySet", errorCodeSet)
-        var dataFromSharedPreferenceMutableString : MutableSet<String> = dataFromSharedPreference
-        //dataFromSharedPreferenceMutableString = dataFromSharedPreference
-
-        dataFromSharedPreferenceMutableString.add(response201String) // operation is not supported for read-only collection kotlin
+        //Add the received data via intent to the SharedPreference set of strings
+        var dataFromSharedPreferenceMutableString : MutableSet<String>
+        dataFromSharedPreferenceMutableString = logDataArrayList.toMutableSet()
         with(sharedPreferenceVariableForLogFile.edit()){
             putStringSet("KeySet",dataFromSharedPreferenceMutableString)
-            commit()
+            apply()
         }
 
-        */
     }
 }

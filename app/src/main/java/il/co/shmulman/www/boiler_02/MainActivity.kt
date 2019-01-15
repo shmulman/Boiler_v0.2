@@ -27,14 +27,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //Clear the previous Log data
-        dataForLogArrayList.clear()
-
         // Local axillary variables initiation
         var response200String = ""
         var response201String = ""
         var dataLoaded200 = false
         var dataLoaded201 = false
+
+        //Clear the previous Log data
+        dataForLogArrayList.clear()
 
         ReadSensorsBtn.setOnClickListener() {
             ConnectionStatus.text = "Loading sensors ..."
@@ -86,6 +86,9 @@ class MainActivity : AppCompatActivity() {
             val intentToSettings = Intent(applicationContext,ActivitySettings::class.java)
             startActivity(intentToSettings)
         }
+
+        // Press "Read temperature" for the initiation
+        ReadSensorsBtn.performClick()
     }
 
     private fun printOutput(response : String, sensorNumber : String) : String {
